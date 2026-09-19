@@ -1,0 +1,1293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f9">
+  <meta name="description" content="HTML Launcher — run HTML, CSS, and JavaScript files directly in your browser.">
+  <title>HTML Launcher — Run HTML, CSS & JavaScript</title>
+
+  <style>
+    :root {
+      --ink: #12151c;
+      --ink-soft: #4b5462;
+      --muted: #8992a0;
+      --paper: #f3f5f9;
+      --surface: #ffffff;
+      --line: #e0e4eb;
+      --line-strong: #c7cdd7;
+      --accent: #2f4de0;
+      --accent-soft: #e9edfd;
+      --good: #12946a;
+      --good-soft: #e4f6ee;
+      --bad: #d1483f;
+      --bad-soft: #fbeae8;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 11px;
+      --radius-pill: 999px;
+      --shadow-card: 0 1px 2px rgba(18,21,28,.04);
+      --shadow-lift: 0 16px 40px -20px rgba(18,21,28,.28);
+      --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      min-height: 100%;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    textarea:focus-visible,
+    .drop-zone:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    ::selection {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .container {
+      width: min(100% - 32px, 760px);
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 30px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 27px;
+      font-weight: 750;
+      letter-spacing: -1.2px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 37px;
+      height: 37px;
+      border-radius: 11px;
+      background: var(--ink);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: -1px;
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 57px 0 35px;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+      background-size: 22px 22px;
+      -webkit-mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 20%, transparent 75%);
+      mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 20%, transparent 75%);
+      opacity: .5;
+    }
+
+    .hero-content {
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 6px 12px;
+      border: 1px solid #d8e0fb;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--good);
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      font-family: var(--font-display);
+      font-size: clamp(34px, 6vw, 48px);
+      font-weight: 750;
+      letter-spacing: -2px;
+      line-height: 1.08;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      max-width: 455px;
+      margin: 0 auto;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .panel {
+      margin-bottom: 20px;
+      padding: 27px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+
+    .panel-sub {
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    .step-label {
+      flex-shrink: 0;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-pill);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .drop-zone {
+      padding: 33px 18px;
+      border: 1.5px dashed var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--paper);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .upload-icon {
+      display: grid;
+      place-items: center;
+      width: 49px;
+      height: 49px;
+      margin: 0 auto 14px;
+      border: 1px solid #dce3fc;
+      border-radius: 15px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 24px;
+    }
+
+    .drop-zone strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .drop-zone p {
+      margin-bottom: 17px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 43px;
+      padding: 12px 22px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 650;
+      line-height: 1.2;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: white;
+      box-shadow: var(--shadow-lift);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #20242e;
+    }
+
+    .btn-outline {
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      border-color: var(--ink);
+    }
+
+    .btn-sm {
+      min-height: 35px;
+      padding: 8px 15px;
+      font-size: 12px;
+    }
+
+    .btn-danger {
+      border-color: var(--line-strong);
+      color: var(--bad);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+    }
+
+    .file-card {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+
+    .file-card.visible {
+      display: flex;
+    }
+
+    .file-icon {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 39px;
+      height: 39px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .file-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+    }
+
+    .remove-btn {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: white;
+      color: var(--muted);
+      font-size: 19px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      color: var(--bad);
+      border-color: var(--bad);
+    }
+
+    .editor-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 17px;
+      border: 0;
+      border-top: 1px solid var(--line);
+      background: transparent;
+      color: var(--accent);
+      font-size: 12.5px;
+      font-weight: 650;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .editor {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .editor.visible {
+      display: block;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 220px;
+      padding: 14px;
+      resize: vertical;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      outline: none;
+      background: #fbfcfe;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.65;
+      tab-size: 2;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .editor-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .run-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .run-row .btn-primary {
+      flex: 1;
+    }
+
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 17px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--paper);
+      color: var(--ink-soft);
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+
+    .notice-icon {
+      flex-shrink: 0;
+      color: var(--good);
+      font-size: 14px;
+    }
+
+    .preview {
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 17px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .preview-heading {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+
+    .status-dot.ready {
+      background: var(--good);
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink-soft);
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover:not(:disabled) {
+      border-color: var(--line-strong);
+      background: var(--paper);
+    }
+
+    .icon-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .preview-body {
+      position: relative;
+      min-height: 300px;
+      background: #fff;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 520px;
+      border: 0;
+      background: white;
+    }
+
+    .empty-preview {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 28px;
+      background: #fbfcfe;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-preview.hidden {
+      display: none;
+    }
+
+    .empty-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 5px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 17px;
+    }
+
+    .empty-preview strong {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .empty-preview p {
+      max-width: 300px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .preview.fullscreen {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: white;
+    }
+
+    .preview.fullscreen .preview-head {
+      flex-shrink: 0;
+      padding-top: max(13px, env(safe-area-inset-top));
+    }
+
+    .preview.fullscreen .preview-body {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .preview.fullscreen iframe {
+      height: 100%;
+      min-height: 0;
+    }
+
+    .guide {
+      margin: 44px 0 25px;
+    }
+
+    .guide-head {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .guide-head h2 {
+      font-family: var(--font-display);
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: -.7px;
+    }
+
+    .guide-head p {
+      margin-top: 5px;
+      color: var(--ink-soft);
+      font-size: 13px;
+    }
+
+    .guide-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .guide-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+
+    .guide-number {
+      display: grid;
+      place-items: center;
+      width: 29px;
+      height: 29px;
+      margin-bottom: 12px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .guide-card h3 {
+      margin-bottom: 5px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .guide-card p {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 28px;
+      padding: 24px 12px max(24px, env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 10000;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 50%;
+      max-width: calc(100% - 32px);
+      padding: 11px 19px;
+      transform: translate(-50%, 20px);
+      border-radius: var(--radius-pill);
+      background: var(--ink);
+      color: white;
+      box-shadow: var(--shadow-lift);
+      font-size: 12.5px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: calc(100% - 22px);
+      }
+
+      .top {
+        padding-top: 21px;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .hero {
+        padding: 43px 0 28px;
+      }
+
+      h1 {
+        letter-spacing: -1.5px;
+      }
+
+      .hero p {
+        max-width: 340px;
+        font-size: 13.5px;
+      }
+
+      .panel {
+        padding: 19px;
+        border-radius: 19px;
+      }
+
+      .drop-zone {
+        padding: 26px 12px;
+      }
+
+      .run-row {
+        gap: 8px;
+      }
+
+      .run-row .btn {
+        padding: 11px 14px;
+        font-size: 12px;
+      }
+
+      .guide-list {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .guide-number {
+        flex-shrink: 0;
+        margin: 0;
+      }
+
+      iframe {
+        height: 65vh;
+        min-height: 350px;
+      }
+
+      .preview-body {
+        min-height: 350px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark">&lt;/&gt;</div>
+        <span>HTML Launcher</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          Runs in your browser
+        </div>
+
+        <h1>Your HTML.<br><span>Your playground.</span></h1>
+
+        <p>
+          Run HTML, CSS, and JavaScript directly in your browser.
+          No installation. No account. Just upload and run.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="uploadTitle">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title" id="uploadTitle">Upload an HTML file</h2>
+          <p class="panel-sub">Choose a document from your device.</p>
+        </div>
+        <span class="step-label">STEP 01</span>
+      </div>
+
+      <input
+        type="file"
+        id="fileInput"
+        accept=".html,.htm,text/html"
+        hidden
+      >
+
+      <div
+        class="drop-zone"
+        id="dropZone"
+        role="button"
+        tabindex="0"
+        aria-label="Choose an HTML file"
+      >
+        <div class="upload-icon">↑</div>
+        <strong>Choose your HTML document</strong>
+        <p>
+          Browse files on your device or drag and drop here.<br>
+          Supports .html and .htm files up to 10 MB.
+        </p>
+        <button type="button" class="btn btn-outline" id="chooseBtn">
+          Choose file
+        </button>
+      </div>
+
+      <div class="file-card" id="fileCard">
+        <div class="file-icon">HTML</div>
+        <div class="file-info">
+          <div class="file-name" id="fileName">document.html</div>
+          <div class="file-meta" id="fileMeta">0 KB · Ready</div>
+        </div>
+        <button class="remove-btn" id="removeBtn" aria-label="Remove file" title="Remove file">×</button>
+      </div>
+
+      <button
+        class="editor-toggle"
+        id="editorToggle"
+        aria-expanded="false"
+        aria-controls="editor"
+      >
+        <span>Or paste HTML code manually</span>
+        <span id="editorArrow">＋</span>
+      </button>
+
+      <div class="editor" id="editor">
+        <textarea
+          id="codeInput"
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
+          aria-label="HTML source code"
+          placeholder="Paste your HTML, CSS, and JavaScript here..."
+        ></textarea>
+
+        <div class="editor-actions">
+          <button class="btn btn-outline btn-sm" id="sampleBtn">Load example</button>
+          <button class="btn btn-outline btn-sm" id="clearCodeBtn">Clear code</button>
+        </div>
+      </div>
+
+      <div class="run-row">
+        <button class="btn btn-primary" id="runBtn" disabled>
+          ▶ &nbsp; Run HTML
+        </button>
+        <button class="btn btn-outline" id="resetBtn" disabled>
+          ↻ &nbsp; Reset
+        </button>
+      </div>
+
+      <div class="notice">
+        <span class="notice-icon">ⓘ</span>
+        <span>
+          Your HTML is processed locally in your browser.
+          It is not uploaded to this website. External resources
+          referenced by your document may still connect to the internet.
+        </span>
+      </div>
+    </section>
+
+    <section class="preview" id="preview" aria-label="HTML preview">
+      <div class="preview-head">
+        <div class="preview-heading">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="previewLabel">Preview</span>
+        </div>
+
+        <div class="preview-actions">
+          <button class="icon-btn" id="reloadBtn" title="Run again" aria-label="Run again" disabled>↻</button>
+          <button class="icon-btn" id="fullscreenBtn" title="Full screen" aria-label="Full screen" disabled>⛶</button>
+        </div>
+      </div>
+
+      <div class="preview-body">
+        <iframe
+          id="previewFrame"
+          title="HTML document preview"
+          sandbox="allow-scripts allow-forms allow-modals allow-pointer-lock allow-downloads"
+          referrerpolicy="no-referrer"
+        ></iframe>
+
+        <div class="empty-preview" id="emptyPreview">
+          <div class="empty-icon">&lt;/&gt;</div>
+          <strong>Your preview will appear here</strong>
+          <p>Upload an HTML file or paste your code, then press Run HTML.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide">
+      <div class="guide-head">
+        <h2>How it works</h2>
+        <p>Three simple steps to run your HTML.</p>
+      </div>
+
+      <div class="guide-list">
+        <article class="guide-card">
+          <div class="guide-number">01</div>
+          <div>
+            <h3>Choose a file</h3>
+            <p>Select an HTML document from your iPhone, iPad, or computer.</p>
+          </div>
+        </article>
+
+        <article class="guide-card">
+          <div class="guide-number">02</div>
+          <div>
+            <h3>Run your code</h3>
+            <p>Your document opens in an isolated browser preview.</p>
+          </div>
+        </article>
+
+        <article class="guide-card">
+          <div class="guide-number">03</div>
+          <div>
+            <h3>Explore the result</h3>
+            <p>Interact with your page, rerun it, or expand the preview.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      HTML Launcher · A simple browser playground<br>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+
+      const fileInput = $("fileInput");
+      const dropZone = $("dropZone");
+      const fileCard = $("fileCard");
+      const fileName = $("fileName");
+      const fileMeta = $("fileMeta");
+      const codeInput = $("codeInput");
+      const editor = $("editor");
+      const editorToggle = $("editorToggle");
+      const editorArrow = $("editorArrow");
+
+      const runBtn = $("runBtn");
+      const resetBtn = $("resetBtn");
+      const reloadBtn = $("reloadBtn");
+      const fullscreenBtn = $("fullscreenBtn");
+
+      const preview = $("preview");
+      const previewFrame = $("previewFrame");
+      const emptyPreview = $("emptyPreview");
+      const statusDot = $("statusDot");
+      const previewLabel = $("previewLabel");
+
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+      let sourceCode = "";
+      let sourceName = "";
+      let hasSource = false;
+      let isRunning = false;
+      let toastTimer = null;
+      let currentRun = 0;
+
+      function showToast(message) {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2800);
+      }
+
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+      }
+
+      function updateButtons() {
+        runBtn.disabled = !hasSource;
+        resetBtn.disabled = !hasSource;
+        reloadBtn.disabled = !hasSource;
+        fullscreenBtn.disabled = !isRunning;
+      }
+
+      function setRunning(running) {
+        isRunning = running;
+        statusDot.classList.toggle("ready", running);
+        previewLabel.textContent = running ? "Preview · Running" : "Preview";
+        updateButtons();
+      }
+
+      function setSource(code, name, size) {
+        sourceCode = code;
+        sourceName = name || "pasted-code.html";
+        hasSource = true;
+
+        fileName.textContent = sourceName;
+        fileMeta.textContent = formatSize(size) + " · Ready";
+        fileCard.classList.add("visible");
+
+        if (codeInput.value !== code) {
+          codeInput.value = code;
+        }
+
+        updateButtons();
+      }
+
+      function clearSource() {
+        sourceCode = "";
+        sourceName = "";
+        hasSource = false;
+
+        fileInput.value = "";
+        codeInput.value = "";
+
+        fileCard.classList.remove("visible");
+        resetPreview();
+        updateButtons();
+      }
+
+      function resetPreview() {
+        currentRun++;
+        previewFrame.srcdoc = "";
+        emptyPreview.classList.remove("hidden");
+        setRunning(false);
+
+        preview.classList.remove("fullscreen");
+        fullscreenBtn.textContent = "⛶";
+        fullscreenBtn.title = "Full screen";
+        fullscreenBtn.setAttribute("aria-label", "Full screen");
+      }
+
+      function loadFile(file) {
+        if (!file) return;
+
+        if (!/\.html?$/i.test(file.name)) {
+          showToast("Please choose an .html or .htm file.");
+          return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+          showToast("File is too large. Maximum size is 10 MB.");
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          if (typeof reader.result !== "string") {
+            showToast("Could not read this file.");
+            return;
+          }
+
+          setSource(reader.result, file.name, file.size);
+          showToast("HTML file ready to run.");
+        };
+
+        reader.onerror = () => {
+          showToast("File could not be read. Please try again.");
+        };
+
+        reader.readAsText(file);
+      }
+
+      function runHTML() {
+        if (!hasSource) {
+          showToast("Choose a file or paste HTML code first.");
+          return;
+        }
+
+        currentRun++;
+        emptyPreview.classList.add("hidden");
+        previewFrame.srcdoc = sourceCode;
+        setRunning(true);
+
+        preview.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+
+      function toggleFullscreen() {
+        const isFullscreen = preview.classList.toggle("fullscreen");
+
+        fullscreenBtn.textContent = isFullscreen ? "×" : "⛶";
+        fullscreenBtn.title = isFullscreen ? "Close full screen" : "Full screen";
+        fullscreenBtn.setAttribute(
+          "aria-label",
+          isFullscreen ? "Close full screen" : "Full screen"
+        );
+      }
+
+      $("chooseBtn").addEventListener("click", event => {
+        event.stopPropagation();
+        fileInput.click();
+      });
+
+      dropZone.addEventListener("click", event => {
+        if (event.target.closest("button")) return;
+        fileInput.click();
+      });
+
+      dropZone.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          fileInput.click();
+        }
+      });
+
+      fileInput.addEventListener("change", () => {
+        loadFile(fileInput.files[0]);
+      });
+
+      ["dragenter", "dragover"].forEach(type => {
+        dropZone.addEventListener(type, event => {
+          event.preventDefault();
+          dropZone.classList.add("drag");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(type => {
+        dropZone.addEventListener(type, event => {
+          event.preventDefault();
+          dropZone.classList.remove("drag");
+        });
+      });
+
+      dropZone.addEventListener("drop", event => {
+        loadFile(event.dataTransfer.files[0]);
+      });
+
+      $("removeBtn").addEventListener("click", clearSource);
+
+      editorToggle.addEventListener("click", () => {
+        const isOpen = editor.classList.toggle("visible");
+
+        editorToggle.setAttribute("aria-expanded", String(isOpen));
+        editorArrow.textContent = isOpen ? "－" : "＋";
+      });
+
+      codeInput.addEventListener("input", () => {
+        const code = codeInput.value;
+
+        if (code.trim()) {
+          setSource(code, "pasted-code.html", new Blob([code]).size);
+        } else {
+          sourceCode = "";
+          sourceName = "";
+          hasSource = false;
+          fileCard.classList.remove("visible");
+          updateButtons();
+        }
+      });
+
+      $("sampleBtn").addEventListener("click", () => {
+        const sample = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My HTML Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      background: #f3f5f9;
+      color: #12151c;
+    }
+
+    button {
+      padding: 13px 22px;
+      border: 0;
+      border-radius: 999px;
+      background: #2f4de0;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello, iPhone!</h1>
+  <p>HTML, CSS, and JavaScript are running.</p>
+  <button onclick="sayHello()">Click me</button>
+  <p id="result"></p>
+
+  <script>
+    function sayHello() {
+      document.getElementById("result").textContent =
+        "JavaScript is working!";
+    }
+  <\/script>
+</body>
+</html>`;
+
+        setSource(sample, "sample.html", new Blob([sample]).size);
+        showToast("Example loaded.");
+      });
+
+      $("clearCodeBtn").addEventListener("click", clearSource);
+
+      runBtn.addEventListener("click", runHTML);
+      resetBtn.addEventListener("click", resetPreview);
+
+      reloadBtn.addEventListener("click", runHTML);
+
+      fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          preview.classList.remove("fullscreen");
+          fullscreenBtn.textContent = "⛶";
+          fullscreenBtn.title = "Full screen";
+          fullscreenBtn.setAttribute("aria-label", "Full screen");
+        }
+      });
+
+      previewFrame.srcdoc = "";
+      updateButtons();
+    })();
+  </script>
+</body>
+</html>
